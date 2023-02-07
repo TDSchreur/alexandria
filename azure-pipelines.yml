@@ -12,28 +12,38 @@ steps:
     displayName: Biceps deployment via CLI
     inputs:
       azureSubscription: $(azureServiceConnection)
-      scriptType: "pscore"
       scriptLocation: "inlineScript"
-      inlineScript: "az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json"
+      inlineScript: |
+       $out = az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json
 
-  - task: PowerShell@2
-    name: 'SetDeploymentOutputVariables'
-    displayName: 'Set Deployment Output Variables'
-    inputs:
-      targetType: inline
-      script: |
-        $armOutputObj = '$(deploymentOutputs)' | ConvertFrom-Json
-        $armOutputObj.PSObject.Properties | ForEach-Object {
-          $keyname = $_.Name
-          $value = $_.Value.value
+       $provisionOutputs = [PSCustomObject]@{}
+        $out | Get-Member -MemberType NoteProperty | ForEach-Object {
 
-          # Creates a standard pipeline variable
-          Write-Output "##vso[task.setvariable variable=$keyName;issecret=true]$value"
-
-          # Display keys in pipeline
-          Write-Output "output variable: $keyName"
+            $name = $_.name
+            $provisionOutputs | Add-Member -MemberType NoteProperty -Name $name -value $out.$name.value
+            Write-Host "##vso[task.setvariable variable=$($name);isOutput=true]$($out.$name.value)"
         }
-      pwsh: true
+        $provisionOutputs
+      scriptType: "pscore"
+
+  # - task: PowerShell@2
+  #   name: 'SetDeploymentOutputVariables'
+  #   displayName: 'Set Deployment Output Variables'
+  #   inputs:
+  #     targetType: inline
+  #     script: |
+  #       $armOutputObj = '$(deploymentOutputs)' | ConvertFrom-Json
+  #       $armOutputObj.PSObject.Properties | ForEach-Object {
+  #         $keyname = $_.Name
+  #         $value = $_.Value.value
+
+  #         # Creates a standard pipeline variable
+  #         Write-Output "##vso[task.setvariable variable=$keyName;issecret=true]$value"
+
+  #         # Display keys in pipeline
+  #         Write-Output "output variable: $keyName"
+  #       }
+  #     pwsh: true
 
   - task: AzureStaticWebApp@0
     inputs:
