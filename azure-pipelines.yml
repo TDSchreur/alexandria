@@ -15,3 +15,11 @@ steps:
       scriptType: "pscore"
       scriptLocation: "inlineScript"
       inlineScript: "az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json"
+
+  - task: AzureStaticWebApp@0
+    inputs:
+      app_location: /
+      api_build_command: yarn run build
+      output_location: /dist/alexandria
+      azure_static_web_apps_api_token: e8accc32405cfb2989784955df213435ceadb0f0a13fc3945b6f38ca0e5b3d6f2-916b09e1-fec9-4fe8-a840-738771f0e468003187163
+      
