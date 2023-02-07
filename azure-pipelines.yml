@@ -18,8 +18,8 @@ steps:
         az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json
  
         deployment_token=$(az deployment group show --resource-group alexandria -n swa-deployment --query properties.outputs.deployment_token.value | tr -d '"')
-        echo "instrumentation key is $deployment_token"
-        echo "##vso[task.setvariable variable=deployment_token;isOutput=true]$deployment_token"
+        echo "deployment token is $deployment_token"
+        echo "##vso[task.setvariable variable=deployment_token;]$deployment_token"
 
   - task: AzureStaticWebApp@0
     displayName: Build and deploy SWA
