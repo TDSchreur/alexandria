@@ -16,10 +16,29 @@ steps:
       scriptLocation: "inlineScript"
       inlineScript: "az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json"
 
+  - task: PowerShell@2
+    name: 'SetDeploymentOutputVariables'
+    displayName: 'Set Deployment Output Variables'
+    inputs:
+      targetType: inline
+      script: |
+        $armOutputObj = '$(deploymentOutputs)' | ConvertFrom-Json
+        $armOutputObj.PSObject.Properties | ForEach-Object {
+          $keyname = $_.Name
+          $value = $_.Value.value
+
+          # Creates a standard pipeline variable
+          Write-Output "##vso[task.setvariable variable=$keyName;issecret=true]$value"
+
+          # Display keys in pipeline
+          Write-Output "output variable: $keyName"
+        }
+      pwsh: true
+
   - task: AzureStaticWebApp@0
     inputs:
       app_location: /
       api_build_command: yarn run build
       output_location: /dist/alexandria
-      azure_static_web_apps_api_token: e8accc32405cfb2989784955df213435ceadb0f0a13fc3945b6f38ca0e5b3d6f2-916b09e1-fec9-4fe8-a840-738771f0e468003187163
+      azure_static_web_apps_api_token: $(deployment_token)
       

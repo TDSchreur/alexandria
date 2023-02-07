@@ -4,7 +4,7 @@ param swa_sku string
 
 var swa_name = '${project_name}-swa'
 
-module sql './modules/swa.bicep' = {
+module swa './modules/swa.bicep' = {
   name: 'swa-deployment'
   params: {
     name: swa_name
@@ -12,3 +12,5 @@ module sql './modules/swa.bicep' = {
     location: location
   }
 }
+
+output deployment_token string = swa.outputs.deployment_token

@@ -2,7 +2,7 @@ param name string
 param location string
 param sku string
 
-resource swa_resource 'Microsoft.Web/staticSites@2021-01-15' = {
+resource swa 'Microsoft.Web/staticSites@2021-01-15' = {
   name: name
   location: location
   tags: null
@@ -13,4 +13,4 @@ resource swa_resource 'Microsoft.Web/staticSites@2021-01-15' = {
   }
 }
 
-// output instrumentationKey string = swa_resource.properties.tok
+output deployment_token string = listSecrets(swa.id, swa.apiVersion).properties.apiKey
