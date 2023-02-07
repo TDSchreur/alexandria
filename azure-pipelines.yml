@@ -48,4 +48,4 @@ stages:
                      azureSubscription: $(azureServiceConnection)
                      scriptType: "pscore"
                      scriptLocation: "inlineScript"
-                     inlineScript: "az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/bicep/parameters.ci.json"
+                     inlineScript: "az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json"
