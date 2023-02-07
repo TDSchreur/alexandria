@@ -19,4 +19,11 @@ steps:
     yarn install
     yarn
     yarn run build
-  displayName: 'install and build'
+  displayName: 'install and build' 
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: "$(Build.ArtifactStagingDirectory)/dist"
+    ArtifactName: "fe-build"
+    publishLocation: "Container"
+  displayName: "publish artifact"
