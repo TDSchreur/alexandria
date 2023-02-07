@@ -13,4 +13,5 @@ resource swa 'Microsoft.Web/staticSites@2021-01-15' = {
   }
 }
 
+#disable-next-line outputs-should-not-contain-secrets
 output deployment_token string = listSecrets(swa.id, swa.apiVersion).properties.apiKey
