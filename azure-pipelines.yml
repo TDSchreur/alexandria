@@ -40,7 +40,8 @@ stages:
          strategy:
            runOnce:
              deploy:
-               steps:
+               steps:                 
+                 - checkout: self                
                  - task: AzureCLI@2
                    displayName: Biceps deployment via CLI
                    inputs:
