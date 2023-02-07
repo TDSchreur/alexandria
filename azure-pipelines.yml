@@ -7,45 +7,11 @@ pool:
 variables:
   azureServiceConnection: "azure-sc"
 
-stages:
-  - stage: Build
-    dependsOn: []
-    jobs:
-      - job: Build
-        steps:
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '18.x'
-            displayName: 'Install Node.js'
-
-          - script: |
-              yarn install
-              yarn
-              yarn run build
-            displayName: 'install and build' 
-
-          - task: PublishBuildArtifacts@1
-            inputs:
-              PathtoPublish: "$(Build.SourcesDirectory)/dist"
-              ArtifactName: "fe-build"
-              publishLocation: "Container"
-            displayName: "publish artifact"
-
-  - stage: Deploy
-    dependsOn:
-      - Build
-    jobs:
-       - deployment: Deploy
-         environment: alexandria-ci
-         strategy:
-           runOnce:
-             deploy:
-               steps:                 
-                 - checkout: self                
-                 - task: AzureCLI@2
-                   displayName: Biceps deployment via CLI
-                   inputs:
-                     azureSubscription: $(azureServiceConnection)
-                     scriptType: "pscore"
-                     scriptLocation: "inlineScript"
-                     inlineScript: "az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json"
+steps:          
+  - task: AzureCLI@2
+    displayName: Biceps deployment via CLI
+    inputs:
+      azureSubscription: $(azureServiceConnection)
+      scriptType: "pscore"
+      scriptLocation: "inlineScript"
+      inlineScript: "az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json"
