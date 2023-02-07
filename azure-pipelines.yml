@@ -4,6 +4,9 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  azureServiceConnection: "azure-sc"
+
 stages:
   - stage: Build
     dependsOn: []
