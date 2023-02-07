@@ -12,3 +12,5 @@ resource swa_resource 'Microsoft.Web/staticSites@2021-01-15' = {
     size: sku
   }
 }
+
+// output instrumentationKey string = swa_resource.properties.tok
