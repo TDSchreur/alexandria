@@ -2,7 +2,7 @@
   "profiles": {
     "api": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7238",
+      "commandLineArgs": "--port 7122",
       "launchBrowser": false
     }
   }
