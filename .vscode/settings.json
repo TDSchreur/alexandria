@@ -1,7 +1,33 @@
 {
-    "azureFunctions.deploySubpath": "api/bin/Release/net6.0/publish",
-    "azureFunctions.projectLanguage": "C#",
-    "azureFunctions.projectRuntime": "~4",
-    "debug.internalConsoleOptions": "neverOpen",
-    "azureFunctions.preDeployTask": "publish (functions)"
+  "azureFunctions.deploySubpath": "api/bin/Release/net6.0/publish",
+  "azureFunctions.projectLanguage": "C#",
+  "azureFunctions.projectRuntime": "~4",
+  "debug.internalConsoleOptions": "neverOpen",
+  "azureFunctions.preDeployTask": "publish (functions)",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnType": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.formatOnSave": true,
+  "html.format.enable": true,
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/*.js": {
+      "when": "$(basename).ts"
+    },
+    "**/*.js.map": {
+      "when": "$(basename)"
+    },
+    "**/dist": true,
+    "**/obj": true,
+    "**/bin": true
+  },
+  "files.defaultLanguage": "typescript",
+  "angular.enable-strict-mode-prompt": false,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

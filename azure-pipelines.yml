@@ -19,7 +19,7 @@ steps:
  
         deployment_token=$(az deployment group show --resource-group alexandria -n swa-deployment --query properties.outputs.deployment_token.value | tr -d '"')
         echo "deployment token is $deployment_token"
-        echo "##vso[task.setvariable variable=deployment_token;]$deployment_token"
+        echo "##vso[task.setvariable variable=deployment_token;issecret=true]$deployment_token"
 
   - task: AzureStaticWebApp@0
     displayName: Build and deploy SWA
