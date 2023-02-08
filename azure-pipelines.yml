@@ -1,32 +1,35 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
-
 variables:
   azureServiceConnection: "azure-sc"
+  pool: Default
 
-steps:          
-  - task: AzureCLI@2
-    displayName: Biceps deployment via CLI
-    inputs:
-      azureSubscription: $(azureServiceConnection)
-      scriptLocation: "inlineScript"
-      scriptType: bash
-      inlineScript: |
-        az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json
- 
-        deployment_token=$(az deployment group show --resource-group alexandria -n swa-deployment --query properties.outputs.deployment_token.value | tr -d '"')
-        echo "deployment token is $deployment_token"
-        echo "##vso[task.setvariable variable=deployment_token;issecret=true]$deployment_token"
+stages:
+  - stage: swa
+    dependsOn: []
+    jobs:
+      - job: BuildAndDeploy
+        pool: $(pool)
+        steps:
+        - task: AzureCLI@2
+          displayName: Biceps deployment via CLI
+          inputs:
+            azureSubscription: $(azureServiceConnection)
+            scriptLocation: "inlineScript"
+            scriptType: bash
+            inlineScript: |
+              az deployment group create -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria -p $(Build.SourcesDirectory)/deploy/parameters.ci.json
 
-  - task: AzureStaticWebApp@0
-    displayName: Build and deploy SWA
-    inputs:
-      app_location: /
-      api_build_command: yarn run build
-      output_location: /dist/alexandria
-      api_location: /api
-      azure_static_web_apps_api_token: $(deployment_token)
-      
+              deployment_token=$(az deployment group show --resource-group alexandria -n swa-deployment --query properties.outputs.deployment_token.value | tr -d '"')
+              echo "deployment token is $deployment_token"
+              echo "##vso[task.setvariable variable=deployment_token;issecret=true]$deployment_token"
+
+        - task: AzureStaticWebApp@0
+          displayName: Build and deploy SWA
+          inputs:
+            app_location: /
+            api_build_command: yarn run build
+            output_location: /dist/alexandria
+            api_location: /api
+            azure_static_web_apps_api_token: $(deployment_token)
