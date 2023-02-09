@@ -1,34 +1,25 @@
-using System.IO;
-using System.Threading.Tasks;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
-namespace api
+namespace api;
+
+public static class GetData
 {
-    public static class GetData
+    [FunctionName("GetData")]
+    public static IActionResult Run(
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
+        Person req,
+        ILogger log)
     {
-        [FunctionName("GetData")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
-        {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+        log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+        string responseMessage = $"Hello, {req.firstName} {req.lastName}. The time is {DateTime.Now:HH:mm:ss}.";
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
-        }
+        return new OkObjectResult(responseMessage);
     }
 }
+
+public record Person(string firstName, string lastName) { }
