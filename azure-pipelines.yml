@@ -6,14 +6,12 @@ pool:
 
 variables:
   azureServiceConnection: 'azure-sc'
-  pool: Default
 
 stages:
   - stage: swa
     dependsOn: []
     jobs:
       - job: BuildAndDeploy
-        pool: $(pool)
         steps:
           - task: AzureCLI@2
             displayName: Biceps deployment via CLI
