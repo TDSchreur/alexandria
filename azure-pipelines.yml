@@ -30,7 +30,7 @@ stages:
             displayName: Build and deploy SWA
             inputs:
               app_location: /
-              api_build_command: yarn run build
+              app_build_command: yarn run build
               output_location: /dist/alexandria
               api_location: /api
               azure_static_web_apps_api_token: $(deployment_token)
