@@ -1,6 +1,6 @@
 using System;
 using System.Net;
-using System.Net.Mime;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -10,29 +10,23 @@ using Microsoft.OpenApi.Models;
 
 namespace api;
 
-public class GetData
+public class GenerateException
 {
-    private readonly ILogger<GetData> _logger;
+    private readonly ILogger<GenerateException> _logger;
 
-    public GetData(ILogger<GetData> logger)
+    public GenerateException(ILogger<GenerateException> log)
     {
-        _logger = logger;
+        _logger = log;
     }
 
-    [FunctionName("GetData")]
+    [FunctionName("GenerateException")]
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
-    [OpenApiRequestBody(MediaTypeNames.Application.Json, typeof(Person))]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
     public IActionResult Run(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
-        Person req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        string responseMessage = $"Hello, {req.firstName} {req.lastName}. The time is {DateTime.Now:HH:mm:ss}.";
-
-        return new OkObjectResult(responseMessage);
+        throw new Exception("Shit hit the fan!");
     }
 }
-
-public record Person(string firstName, string lastName) { }
