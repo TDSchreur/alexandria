@@ -1,15 +1,27 @@
-param name string
+param projectname string
 param location string
+param name string
 param sku string
+param application_insights_instrumentation_key string
+param application_insights_connection_string string
 
 resource swa 'Microsoft.Web/staticSites@2021-01-15' = {
   name: name
   location: location
-  tags: null
+  tags: {
+    project: projectname
+  }
   properties: {}
   sku: {
     name: sku
     size: sku
+  }
+  resource staticWebAppSettings 'config@2021-01-15' = {
+    name: 'appsettings'
+    properties: {
+      APPINSIGHTS_INSTRUMENTATIONKEY: application_insights_instrumentation_key
+      APPLICATIONINSIGHTS_CONNECTION_STRING: application_insights_connection_string
+    }
   }
 }
 
