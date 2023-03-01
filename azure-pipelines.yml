@@ -29,6 +29,7 @@ stages:
           - task: AzureStaticWebApp@0
             displayName: Build and deploy SWA
             inputs:
+              deployment_environment: "release"
               app_location: /
               app_build_command: yarn run build
               output_location: /dist/alexandria

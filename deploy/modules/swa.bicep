@@ -11,7 +11,12 @@ resource swa 'Microsoft.Web/staticSites@2021-01-15' = {
   tags: {
     project: projectname
   }
-  properties: {}
+  properties: {
+    repositoryUrl: 'https://github.com/TDSchreur/alexandria'
+    branch: 'main'
+    stagingEnvironmentPolicy: 'Enabled'
+    allowConfigFileUpdates: true
+  }
   sku: {
     name: sku
     size: sku
