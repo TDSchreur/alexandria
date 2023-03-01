@@ -5,21 +5,15 @@
       "name": "Launch Chrome",
       "request": "launch",
       "type": "chrome",
-      "url": "https://localhost:4200",
+      "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}"
     },
     {
       "type": "msedge",
       "request": "launch",
       "name": "Launch Edge",
-      "url": "https://localhost:4200",
+      "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}"
-    },
-    {
-      "name": "Attach to .NET Functions",
-      "type": "coreclr",
-      "request": "attach",
-      "processId": "${command:azureFunctions.pickProcess}"
     }
   ]
 }

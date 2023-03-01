@@ -53,7 +53,8 @@
           "browserTarget": "alexandria:build:production"
         },
         "development": {
-          "browserTarget": "alexandria:build:development"
+          "browserTarget": "alexandria:build:development",
+          "proxyConfig": "proxy.conf.js"
         }
       },
       "defaultConfiguration": "development"

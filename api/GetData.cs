@@ -24,7 +24,7 @@ public class GetData
     [OpenApiRequestBody(MediaTypeNames.Application.Json, typeof(Person))]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
     public IActionResult Run(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
         Person req)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");

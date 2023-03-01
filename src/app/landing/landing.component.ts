@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'alexandria-landing',
@@ -6,4 +7,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./landing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LandingComponent {}
+export class LandingComponent {
+  constructor(private apiService: ApiService) {}
+
+  getData() {
+    this.apiService.getData().subscribe((data) => {
+      alert(data);
+    });
+  }
+}
