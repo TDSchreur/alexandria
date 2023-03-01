@@ -12,7 +12,7 @@ export class LandingComponent {
 
   getData() {
     this.apiService.getData().subscribe((data) => {
-      alert(data);
+      console.log(data.message);
     });
   }
 }

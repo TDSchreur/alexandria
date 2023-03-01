@@ -29,10 +29,18 @@ public class GetData
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        string responseMessage = $"Hello, {req.firstName} {req.lastName}. The time is {DateTime.Now:HH:mm:ss}.";
+        Response response = new()
+        {
+            Message = $"Hello, {req.firstName} {req.lastName}. The time is {DateTime.Now:HH:mm:ss}."
+        };
 
-        return new OkObjectResult(responseMessage);
+        return new OkObjectResult(response);
     }
 }
 
 public record Person(string firstName, string lastName) { }
+
+public class Response
+{
+    public string Message { get; init; }
+}

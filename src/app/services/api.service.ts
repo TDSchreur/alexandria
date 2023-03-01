@@ -17,11 +17,15 @@ export class ApiService {
     };
 
     console.log(this.baseUrl);
-    return this.http.get<string>(this.baseUrl + 'api/GenerateException');
+    return this.http.post<FuncResponse>(this.baseUrl + 'api/GetData', person);
   }
 }
 
 export interface Person {
   firstName: string;
   lastName: string;
+}
+
+export interface FuncResponse {
+  message: string;
 }
