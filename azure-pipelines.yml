@@ -6,7 +6,7 @@ pool:
 
 variables:
   azureServiceConnection: 'azure-sc'
-  testprojects: '**/*.UnitTests.csproj'
+  testprojects: 'api/tests/**/*.UnitTests.csproj'
 
 stages:
   - stage: swa
