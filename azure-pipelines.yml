@@ -46,7 +46,7 @@ stages:
               command: test
               publishTestResults: false
               projects: $(testprojects)
-              arguments: '--no-restore --no-build --configuration release /p:CollectCoverage=true /p:CoverletOutputFormat="cobertura" /p:CoverletOutput=$(Build.SourcesDirectory)/testresults --logger trx --results-directory:$(Build.SourcesDirectory)/testresults'
+              arguments: '--no-restore --no-build --configuration release /p:CollectCoverage=true /p:CoverletOutputFormat="cobertura" /p:CoverletOutput=$(Build.SourcesDirectory)/testresults/ --logger trx --results-directory:$(Build.SourcesDirectory)/testresults'
 
           - task: PublishTestResults@2
             displayName: Publish Unit Test Results
@@ -59,7 +59,7 @@ stages:
             displayName: Publish Code Coverage Results
             inputs:
               codeCoverageTool: cobertura
-              summaryFileLocation: $(Build.SourcesDirectory)/testresults/**/coverage.cobertura.xml
+              summaryFileLocation: $(Build.SourcesDirectory)/testresults/coverage.cobertura.xml
 
           - task: PublishPipelineArtifact@1
             displayName: 'Publish TestResults Folder'
