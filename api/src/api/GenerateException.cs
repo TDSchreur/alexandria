@@ -6,7 +6,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 
 namespace api;
 
@@ -20,10 +19,11 @@ public class GenerateException
     }
 
     [FunctionName("GenerateException")]
-    [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
+    [OpenApiOperation("Run", new[] { "name" })]
+    [OpenApiResponseWithBody(HttpStatusCode.OK, "text/plain", typeof(string), Description = "The OK response")]
     public IActionResult Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
+        HttpRequest req)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 

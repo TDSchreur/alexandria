@@ -6,7 +6,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 
 namespace api;
 
@@ -20,25 +19,22 @@ public class GetData
     }
 
     [FunctionName("GetData")]
-    [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
+    [OpenApiOperation("Run", new[] { "name" })]
     [OpenApiRequestBody(MediaTypeNames.Application.Json, typeof(Person))]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
+    [OpenApiResponseWithBody(HttpStatusCode.OK, "text/plain", typeof(string), Description = "The OK response")]
     public IActionResult Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
         Person req)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        Response response = new()
-        {
-            Message = $"Hello, {req.firstName} {req.lastName}. The time is {DateTime.Now:HH:mm:ss}."
-        };
+        Response response = new() { Message = $"Hello, {req.FirstName} {req.LastName}. The time is {DateTime.Now:HH:mm:ss}." };
 
         return new OkObjectResult(response);
     }
 }
 
-public record Person(string firstName, string lastName) { }
+public record Person(string FirstName, string LastName) { }
 
 public class Response
 {

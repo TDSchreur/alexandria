@@ -6,6 +6,7 @@ pool:
 
 variables:
   azureServiceConnection: 'azure-sc'
+  testprojects: '"**/*.UnitTests.csproj"'
 
 stages:
   - stage: swa
@@ -13,35 +14,75 @@ stages:
     jobs:
       - job: BuildAndDeploy
         steps:
-          - task: AzureCLI@2
-            displayName: Biceps deployment via CLI
-            inputs:
-              azureSubscription: $(azureServiceConnection)
-              scriptLocation: 'inlineScript'
-              scriptType: bash
-              inlineScript: |
-                az deployment group create -n alexandria -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria-ci -p $(Build.SourcesDirectory)/deploy/parameters.ci.json
+          # - task: AzureCLI@2
+          #   displayName: Biceps deployment via CLI
+          #   inputs:
+          #     azureSubscription: $(azureServiceConnection)
+          #     scriptLocation: 'inlineScript'
+          #     scriptType: bash
+          #     inlineScript: |
+          #       az deployment group create -n alexandria -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria-ci -p $(Build.SourcesDirectory)/deploy/parameters.ci.json
 
-                deployment_token=$(az deployment group show --resource-group alexandria-ci -n alexandria-swa --query properties.outputs.deployment_token.value | tr -d '"')
-                echo "deployment token is $deployment_token"
-                echo "##vso[task.setvariable variable=deployment_token;issecret=true]$deployment_token"
+          #       deployment_token=$(az deployment group show --resource-group alexandria-ci -n alexandria-swa --query properties.outputs.deployment_token.value | tr -d '"')
+          #       echo "deployment token is $deployment_token"
+          #       echo "##vso[task.setvariable variable=deployment_token;issecret=true]$deployment_token"
 
-          - task: AzureStaticWebApp@0
-            displayName: Build and deploy SWA
+          - task: DotNetCoreCLI@2
+            displayName: 'dotnet restore'
             inputs:
-              deployment_environment: "Preview"
-              app_location: /
-              app_build_command: yarn run build
-              output_location: /dist/alexandria
-              api_location: /api
-              azure_static_web_apps_api_token: $(deployment_token)
+              command: restore
+              projects: $(testprojects)
 
-          - task: AzureStaticWebApp@0
-            displayName: Build and deploy SWA
+          - task: DotNetCoreCLI@2
+            displayName: 'dotnet build'
             inputs:
-              deployment_environment: "Production"
-              app_location: /
-              app_build_command: yarn run build
-              output_location: /dist/alexandria
-              api_location: /api
-              azure_static_web_apps_api_token: $(deployment_token)
+              command: 'build'
+              arguments: '--no-restore --configuration release'
+              projects: $(testprojects)
+
+          - task: DotNetCoreCLI@2
+            displayName: Run Unit Tests
+            inputs:
+              command: test
+              publishTestResults: false
+              projects: $(testprojects)
+              arguments: '--no-restore --no-build --configuration release /p:CollectCoverage=true /p:CoverletOutputFormat="cobertura" /p:CoverletOutput=$(Build.SourcesDirectory)/testresults --logger trx --results-directory:$(Build.SourcesDirectory)/testresults'
+
+          - task: PublishTestResults@2
+            displayName: Publish Unit Test Results
+            inputs:
+              testResultsFormat: VSTest
+              testResultsFiles: '**/*.trx'
+              searchFolder: $(Build.SourcesDirectory)/testresults
+
+          - task: PublishCodeCoverageResults@1
+            displayName: Publish Code Coverage Results
+            inputs:
+              codeCoverageTool: cobertura
+              summaryFileLocation: $(Build.SourcesDirectory)/testresults/**/coverage.cobertura.xml
+
+          - task: PublishPipelineArtifact@1
+            displayName: 'Publish TestResults Folder'
+            inputs:
+              targetPath: $(Build.SourcesDirectory)/testresults
+              artifactName: Test Results
+
+          # - task: AzureStaticWebApp@0
+          #   displayName: Build and deploy SWA
+          #   inputs:
+          #     deployment_environment: 'Preview'
+          #     app_location: /
+          #     app_build_command: yarn run build
+          #     output_location: /dist/alexandria
+          #     api_location: /api
+          #     azure_static_web_apps_api_token: $(deployment_token)
+
+          # - task: AzureStaticWebApp@0
+          #   displayName: Build and deploy SWA
+          #   inputs:
+          #     deployment_environment: 'Production'
+          #     app_location: /
+          #     app_build_command: yarn run build
+          #     output_location: /dist/alexandria
+          #     api_location: /api/src/api
+          #     azure_static_web_apps_api_token: $(deployment_token)
