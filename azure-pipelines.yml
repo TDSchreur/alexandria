@@ -11,10 +11,10 @@ variables:
 stages:
   - template: build-pipeline.yml
     parameters:
-      name: ci-staging
+      name: ci_staging
       dependsOn: []
 
   - template: build-pipeline.yml
     parameters:
       name: ci
-      dependsOn: [ci-staging]
+      dependsOn: [ci_staging]
