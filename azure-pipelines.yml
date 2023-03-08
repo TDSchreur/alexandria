@@ -9,7 +9,7 @@ variables:
   testprojects: 'api/tests/**/*.UnitTests.csproj'
 
 stages:
-  - template: build-pipeline.yaml
+  - template: build-pipeline.yml
     parameters:
       name: ci-staging
       dependsOn: []
