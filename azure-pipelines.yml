@@ -14,27 +14,27 @@ stages:
     jobs:
       - job: BuildAndDeploy
         steps:
-          # - task: AzureCLI@2
-          #   displayName: Biceps deployment via CLI
-          #   inputs:
-          #     azureSubscription: $(azureServiceConnection)
-          #     scriptLocation: 'inlineScript'
-          #     scriptType: bash
-          #     inlineScript: |
-          #       az deployment group create -n alexandria -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria-ci -p $(Build.SourcesDirectory)/deploy/parameters.ci.json
+          - task: AzureCLI@2
+            displayName: Biceps deployment via CLI
+            inputs:
+              azureSubscription: $(azureServiceConnection)
+              scriptLocation: 'inlineScript'
+              scriptType: bash
+              inlineScript: |
+                az deployment group create -n alexandria -f $(Build.SourcesDirectory)/deploy/main.bicep -g alexandria-ci -p $(Build.SourcesDirectory)/deploy/parameters.ci.json
 
-          #       deployment_token=$(az deployment group show --resource-group alexandria-ci -n alexandria-swa --query properties.outputs.deployment_token.value | tr -d '"')
-          #       echo "deployment token is $deployment_token"
-          #       echo "##vso[task.setvariable variable=deployment_token;issecret=true]$deployment_token"
+                deployment_token=$(az deployment group show --resource-group alexandria-ci -n alexandria-swa --query properties.outputs.deployment_token.value | tr -d '"')
+                echo "deployment token is $deployment_token"
+                echo "##vso[task.setvariable variable=deployment_token;issecret=true]$deployment_token"
 
           - task: DotNetCoreCLI@2
-            displayName: 'dotnet restore'
+            displayName: 'Restore nuget packages'
             inputs:
               command: restore
               projects: $(testprojects)
 
           - task: DotNetCoreCLI@2
-            displayName: 'dotnet build'
+            displayName: 'Build testprojects'
             inputs:
               command: 'build'
               arguments: '--no-restore --configuration release'
@@ -67,22 +67,22 @@ stages:
               targetPath: $(Build.SourcesDirectory)/testresults
               artifactName: Test Results
 
-          # - task: AzureStaticWebApp@0
-          #   displayName: Build and deploy SWA
-          #   inputs:
-          #     deployment_environment: 'Preview'
-          #     app_location: /
-          #     app_build_command: yarn run build
-          #     output_location: /dist/alexandria
-          #     api_location: /api
-          #     azure_static_web_apps_api_token: $(deployment_token)
+          - task: AzureStaticWebApp@0
+            displayName: Build and deploy SWA
+            inputs:
+              deployment_environment: 'Preview'
+              app_location: /
+              app_build_command: yarn run build
+              output_location: /dist/alexandria
+              api_location: /api
+              azure_static_web_apps_api_token: $(deployment_token)
 
-          # - task: AzureStaticWebApp@0
-          #   displayName: Build and deploy SWA
-          #   inputs:
-          #     deployment_environment: 'Production'
-          #     app_location: /
-          #     app_build_command: yarn run build
-          #     output_location: /dist/alexandria
-          #     api_location: /api/src/api
-          #     azure_static_web_apps_api_token: $(deployment_token)
+          - task: AzureStaticWebApp@0
+            displayName: Build and deploy SWA
+            inputs:
+              deployment_environment: ''
+              app_location: /
+              app_build_command: yarn run build
+              output_location: /dist/alexandria
+              api_location: /api/src/api
+              azure_static_web_apps_api_token: $(deployment_token)
