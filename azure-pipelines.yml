@@ -14,7 +14,7 @@ stages:
       name: ci-staging
       dependsOn: []
 
-  - template: build-pipeline.yaml
+  - template: build-pipeline.yml
     parameters:
       name: ci
       dependsOn: [ci-staging]
