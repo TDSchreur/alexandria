@@ -1,0 +1,12 @@
+GET http://localhost:7071/api/GetToken HTTP/1.1
+
+###
+
+POST http://localhost:7071/api/GetData HTTP/1.1
+content-type: application/json
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkRlbm5pcyIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTY3ODQ1MTAzNCwiZXhwIjoxNjc4NDU0NjM0LCJpYXQiOjE2Nzg0NTEwMzQsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwNzEiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjcwNzEifQ.vdJZ9yx9u-kiy0I7KBdeHBnzDy8iNhoeZf2VO1pQfMc
+
+{
+    "firstName": "Dennis",
+    "lastName": "Schreur"
+}

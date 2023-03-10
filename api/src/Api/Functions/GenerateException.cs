@@ -7,7 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 
-namespace api;
+namespace Alexandria.Api.Functions;
 
 public class GenerateException
 {
@@ -19,7 +19,7 @@ public class GenerateException
     }
 
     [FunctionName("GenerateException")]
-    [OpenApiOperation("Run", new[] { "name" })]
+    [OpenApiOperation(nameof(GenerateException), FunctionCategories.TestFunctions)]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "text/plain", typeof(string), Description = "The OK response")]
     public IActionResult Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]

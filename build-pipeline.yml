@@ -66,7 +66,7 @@ stages:
             displayName: 'Publish TestResults Folder'
             inputs:
               targetPath: $(Build.SourcesDirectory)/testresults
-              artifactName: Test Results
+              artifactName: 'Test Results ${{ parameters.name }}'
 
           - task: AzureStaticWebApp@0
             displayName: Build and deploy SWA
@@ -75,5 +75,5 @@ stages:
               app_location: /
               app_build_command: yarn run build
               output_location: /dist/alexandria
-              api_location: /api/src/api
+              api_location: /api/src/Api
               azure_static_web_apps_api_token: $(deployment_token)

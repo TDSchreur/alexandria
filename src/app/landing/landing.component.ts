@@ -8,11 +8,13 @@ import { ApiService } from '../services/api.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingComponent {
+  message = '';
+
   constructor(private apiService: ApiService) {}
 
   getData() {
     this.apiService.getData().subscribe((data) => {
-      console.log(data.message);
+      this.message = data.message;
     });
   }
 }
