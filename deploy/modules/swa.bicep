@@ -11,6 +11,9 @@ resource swa 'Microsoft.Web/staticSites@2021-01-15' = {
   tags: {
     project: projectname
   }
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     repositoryUrl: 'https://github.com/TDSchreur/alexandria'
     branch: 'main'
@@ -29,6 +32,7 @@ resource swa 'Microsoft.Web/staticSites@2021-01-15' = {
     }
   }
 }
+output identity string = swa.identity.principalId
 
 #disable-next-line outputs-should-not-contain-secrets
 output deployment_token string = listSecrets(swa.id, swa.apiVersion).properties.apiKey

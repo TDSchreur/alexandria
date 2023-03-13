@@ -11,6 +11,7 @@ param law_dailyQuotaGb int
 var law_name = 'law-${project_name}-${environment}'
 var swa_name = 'swa-${project_name}-${environment}'
 var ai_name = 'ai-${project_name}-${environment}'
+var kv_name = 'kv-${project_name}-${environment}'
 
 module law './modules/law.bicep' = {
   name: '${project_name}-law'
@@ -43,6 +44,16 @@ module swa './modules/swa.bicep' = {
     sku: swa_sku
     application_insights_instrumentation_key: ai.outputs.instrumentationKey
     application_insights_connection_string: ai.outputs.connectionString
+  }
+}
+
+module kv 'modules/kv.bicep' = {
+  name: '${project_name}-kv'
+  params: {
+    projectname: project_name
+    location: location
+    name: kv_name
+    swa_objectid: swa.outputs.identity
   }
 }
 
